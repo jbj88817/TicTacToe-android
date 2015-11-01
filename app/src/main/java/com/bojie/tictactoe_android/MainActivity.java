@@ -15,6 +15,8 @@ public class MainActivity extends AppCompatActivity {
     // 0 = yellow, 1 = red
     int activePlayer = 0;
 
+    boolean gameIsActive = true;
+
     // 2 means unplayed
     int[] gameState = {2, 2, 2, 2, 2, 2, 2, 2, 2};
 
@@ -37,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
 
         int tappedCounter = Integer.parseInt(counter.getTag().toString());
 
-        if (gameState[tappedCounter] == 2) {
+        if (gameState[tappedCounter] == 2 && gameIsActive) {
 
             gameState[tappedCounter] = activePlayer;
 
@@ -58,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
                         gameState[winningPosition[0]] != 2) {
 
                     // Someone has won
+                    gameIsActive = false;
 
                     String winner = "Red";
                     if (gameState[winningPosition[0]] == 0) {
@@ -68,6 +71,22 @@ public class MainActivity extends AppCompatActivity {
 
                     LinearLayout linearLayout = (LinearLayout) findViewById(R.id.play_again_layout);
                     linearLayout.setVisibility(View.VISIBLE);
+                } else {
+                    boolean gameIsOver = true;
+
+                    for (int counterState : gameState) {
+                        if (counterState == 2) {
+                            gameIsOver = false;
+                        }
+                    }
+
+                    if (gameIsOver) {
+                        TextView winnerMessage = (TextView) findViewById(R.id.winning_message);
+                        winnerMessage.setText("It's a draw.");
+
+                        LinearLayout linearLayout = (LinearLayout) findViewById(R.id.play_again_layout);
+                        linearLayout.setVisibility(View.VISIBLE);
+                    }
                 }
             }
         }
@@ -78,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
         linearLayout.setVisibility(View.INVISIBLE);
 
         activePlayer = 0;
+        gameIsActive = true;
 
         for (int i = 0; i < gameState.length; i++) {
             gameState[i] = 2;
