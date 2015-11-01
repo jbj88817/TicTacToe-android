@@ -4,7 +4,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.GridLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -53,11 +56,36 @@ public class MainActivity extends AppCompatActivity {
                 if (gameState[winningPosition[0]] == gameState[winningPosition[1]] &&
                         gameState[winningPosition[1]] == gameState[winningPosition[2]] &&
                         gameState[winningPosition[0]] != 2) {
-                    Log.d("winning", gameState[winningPosition[0]]+"");
+
+                    // Someone has won
+
+                    String winner = "Red";
+                    if (gameState[winningPosition[0]] == 0) {
+                        winner = "Yellow";
+                    }
+                    TextView winnerMessage = (TextView) findViewById(R.id.winning_message);
+                    winnerMessage.setText(winner + " has won!");
+
+                    LinearLayout linearLayout = (LinearLayout) findViewById(R.id.play_again_layout);
+                    linearLayout.setVisibility(View.VISIBLE);
                 }
             }
         }
+    }
 
+    public void playAgain(View view) {
+        LinearLayout linearLayout = (LinearLayout) findViewById(R.id.play_again_layout);
+        linearLayout.setVisibility(View.INVISIBLE);
 
+        activePlayer = 0;
+
+        for (int i = 0; i < gameState.length; i++) {
+            gameState[i] = 2;
+        }
+
+        GridLayout gridLayout = (GridLayout) findViewById(R.id.grid_board);
+        for (int i = 0; i < gridLayout.getChildCount(); i++) {
+            ((ImageView) gridLayout.getChildAt(i)).setImageDrawable(null);
+        }
     }
 }
